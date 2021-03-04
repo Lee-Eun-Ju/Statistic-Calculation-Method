@@ -1,0 +1,127 @@
+---
+title: "Rmarkdown-Intro"
+author: "Soyoung Park"
+date: '2021-03-02 '
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+<!-- 한글로 보고서도 가능? Shift+Ctrl+C(windows), Shift+CMD+C(macOS)-->
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Code Chunks 
+
+```{r}
+norm <- rnorm(100, mean = 0, sd = 1)
+head(norm)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent **printing** of the R code that generated the plot.
+
+
+## Including dataframe
+
+```{r}
+A <- c("a", "a", "b", "b")
+B <- c(5, 10, 15, 20)
+dataframe <- data.frame(A, B)
+plot(dataframe)
+```
+
+## Load the .csv file
+
+Note that the `eval= FALSE` parameter was added to the code chunk to prevent **running** of the R code that generated the plot.
+
+```{r, eval=FALSE}
+dataframe <- read.csv("~/Desktop/Code/dataframe.csv")
+```
+
+## Load libraries
+
+```{r}
+library(dplyr)
+```
+
+## Hiding code chunks
+
+If you don’t want the code of a particular code chunk to appear in the final document, but still want to show the output (e.g. a plot), then you can include `echo = FALSE` in the code chunk instructions.
+
+
+```{r, echo = FALSE}
+A <- c("a", "a", "b", "b")
+B <- c(5, 10, 15, 20)
+dataframe <- data.frame(A, B)
+plot(dataframe)
+```
+
+
+
+Similarly, you might want to create an object, but not include both the code and the output in the final `.html` file. To do this you can use, `include = FALSE`. Be aware though, when making reproducible research it’s often not a good idea to completely hide some part of your analysis:
+
+```{r, include = FALSE}
+dataframe <- data.frame(A, B)
+plot(dataframe)
+```
+
+
+## Inserting tables 
+
+```{r}
+dataframe
+```
+
+## Kable() function from knitr package
+
+```{r}
+library(knitr)
+kable(dataframe, digits = 2)
+```
+
+
+## Manually creaing tables
+
+| Plant | Temp. | Growth |
+|:------|:-----:|-------:|
+| A     | 20    | 0.65   |
+| B     | 20    | 0.95   |
+| C     | 20    | 0.15   |
+
+## Inserting plots
+
+```{r}
+library(ggplot2)
+ggplot(data = mpg, mapping = aes(x = displ, y = hwy, color= drv)) + 
+     geom_smooth(mapping = aes(linetype = drv), method = 'loess') +
+     geom_point()
+```
+
+
+
+
+
+## Helpful resources
+
+https://ourcodingclub.github.io/tutorials/rmarkdown/
+
+
