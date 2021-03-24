@@ -404,20 +404,27 @@ daily %>%
 1) Come up with another approach that will give you the same output as not_cancelled %>% count(dest) and not_cancelled %>% count(tailnum, wt = distance) (without using count()).
 ```{r}
 not_cancelled = flights %>% filter(!is.na(dep_delay), !is.na(arr_delay))
-not_cancelled %>% count(dest)
+
+#not_cancelled %>% count(dest)
 dest_by = group_by(not_cancelled, dest)
 summarise(dest_by, n())
 
-not_cancelled %>% count(tailnum, wt=distance)
+#not_cancelled %>% count(tailnum, wt=distance)
 tail_by = group_by(not_cancelled, tailnum)
 summarise(tail_by, sum_dist=sum(distance))
 ```
 
 2) Look at the number of canceled flights per day. Is there a pattern? Is the proportion of canceled flights related to the average delay?
 ```{r}
-per_day = group_by(flights, year, month, day)
-cancel = summarise(per_day, prop = mean(is.na(dep_delay)|is.na(arr_delay)))
-cancel
+cancel = flights %>% group_by(year,month, day) %>% 
+  summarise(n = sum(is.na(dep_delay)|is.na(arr_delay)), 
+            prop = mean(is.na(dep_delay)|is.na(arr_delay)),
+            average_delay = mean(arr_delay>0, na.rm=TRUE))
+
+cancel %>% ggplot(aes(n)) + geom_histogram()
+cancel %>% ggplot(aes(x=prop, y=average_delay)) +
+  geom_smooth() + geom_point(alpha=0.1)
+
 ```
 
 3) Which carrier has the worst delays? Challenge: can you disentangle the effects of bad airports vs. bad carriers? Why/why not? (Hint: think about flights %>% group_by(carrier, dest) %>% summarise(n()))
