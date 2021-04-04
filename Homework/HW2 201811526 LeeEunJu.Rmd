@@ -1,15 +1,15 @@
 ---
 title: "Statistic Calculate Method"
-output: html_document
+output: html_document 
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE, message=FALSE, warning=FALSE)
+knitr::opts_chunk$set(echo = FALSE, message=FALSE, warning=FALSE, fig.width=6, fig.height=4)
 ```
 
 ## HW2 201811526 이은주
 
-```{r echo=FALSE}
+```{r echo=FALSE, include=TRUE}
 library(tidyverse)
 data(mpg)
 ```

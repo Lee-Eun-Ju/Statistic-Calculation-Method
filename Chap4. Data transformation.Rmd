@@ -429,12 +429,44 @@ cancel %>% ggplot(aes(x=prop, y=average_delay)) +
 
 3) Which carrier has the worst delays? Challenge: can you disentangle the effects of bad airports vs. bad carriers? Why/why not? (Hint: think about flights %>% group_by(carrier, dest) %>% summarise(n()))
 ```{r}
-flights %>% group_by(carrier, dest ) %>% summarise(n())
+# EV carrier가 가장 delay 횟수가 많았다.
+car =flights %>% group_by(carrier) %>% 
+  summarise(n=sum(arr_delay>0, na.rm=TRUE)) %>% arrange(desc(n))
+
+dis = flights %>% 
+  group_by(carrier,dest) %>% 
+  summarise(n=n(), delay_prop=mean(arr_delay>0, na.rm=TRUE))
+
+ggplot(dis) +
+  geom_bar(aes(x=carrier,y=delay_prop, colour=dest)) 
+
+dis %>% 
+  ggplot() +
+  geom_point(aes(x=dest, y=prop, colour=carrier))
+  
+sum(dis[])
+
+
+
+flights %>% group_by(carrier) %>% summarise(n)
+
+            delay=sum(arr_delay>0, na.rm=TRUE),
+            prop=mean(arr_delay>0, na.rm=TRUE))
+car_dest %>% ggplot(mapping=aes(x=dest,delay)) + 
+  geom_histogram() + facet_wrap(.~carrier)
+  
+ggplot(data=mpg) +
+  geom_point(mapping=aes(x=displ,y=hwy)) +
+  facet_wrap(.~cty)
+
+  summarise(n=sum(arr_delay>0, na.rm=TRUE)) %>% arrange(desc(n)) %>% table() %>% t()
+car_dest %>% ggplot(mapping=aes(x=carrier)) + geom_abline(mapping=aes(colour=dest)) 
 ```
 
 4) Counts the number of flights to a destination and sorts them from highest to lowest.
 ```{r}
-
+flights %>% group_by(dest) %>% 
+  summarise(n=n()) %>% arrange(desc(n))
 ```
 
 ### Grouped mutates and filters
@@ -524,7 +556,15 @@ Consider two metrics:
 1-1. proportion of flights not delayed or canceled, and
 1-2. mean arrival delay.
 ```{r}
+#1-1
+flights %>% group_by(tailnum) %>% 
+  mutate(prop = mean(arr_delay <=0 & !(is.na(arr_delay)|is.na(dep_delay)), na.rm=TRUE)) %>% 
+  select(tailnum, prop)
 
+#1-2
+flights %>% group_by(tailnum) %>% 
+  mutate(arr_delay_mean = mean(arr_delay, na.rm=TRUE)) %>% 
+  select(tailnum, arr_delay_mean)
 ```
 
 2) What time of day should you fly if you want to avoid delays as much as possible?
